@@ -78,10 +78,9 @@ fn generate_email() -> String {
     format!("xx@xxxxxxx.xxx {}", email)
 }
 
-fn generate_pesel() {
-    let mut rng = rand::thread_rng();
-
+fn generate_pesel(_age: Option<u8>) {
     let date = chrono::NaiveDate::from_ymd_opt(rand::thread_rng().gen_range(1900..2024), rand::thread_rng().gen_range(1..12), rand::thread_rng().gen_range(1..28));
+
     let date = match date {
         Some(date) => date,
         None => panic!("Invalid date")
@@ -93,26 +92,29 @@ fn generate_pesel() {
 
     let is_genz = y >= 2000;
 
-    let year = if is_genz { y - 2000 } else { y - 1900 };
-    let year = match year {
+    let year = match if is_genz { y - 2000 } else { y - 1900 } {
         0 => "00".into(),
-        1..=9 => format!("0{}", year),
-        _ => year.to_string()
+        year => match year {
+            1..=9 =>    format!("0{}", year),
+            _ => year.to_string()
+        }
     };
 
-    let month = if is_genz { m + 20 } else { m };
-    let month = match month {
-        0..=9 => format!("0{}", month),
-        _ => month.to_string()
+    let month = match if is_genz { m + 20 } else { m } {
+        month =>  match month {
+            0..=9 => format!("0{}", month),
+            _ => month.to_string()
+        }
     };
 
     let day = if d < 10 { format!("0{}", d) } else { d.to_string() };
 
-    let ran = rng.gen_range(100..999);
-    let sex = rng.gen_range(0..9);
-    let parts = format!("{}{}{}{}{}", year, month, day, ran, sex);
+    let ran = rand::thread_rng().gen_range(1000..9999);
+    let sex = if ran % 2 == 0 { "M" } else { "F" };
+    let parts = format!("{}{}{}{}", year, month, day, ran);
     let controllist = [1, 3, 7, 9, 1, 3, 7, 9, 1, 3];
     let mut sum = 0;
+
     for (i, c) in parts.chars().enumerate() {
         let c = c.to_digit(10).unwrap();
         sum += c * controllist[i];
@@ -126,7 +128,7 @@ fn generate_pesel() {
     println!();
     println!("pesel {}{}", parts, control);
     println!("date  {}", date.format("%Y-%m-%d"));
-    println!("sex   {}", if sex % 2 == 0 { "F" } else { "M" });
+    println!("sex   {}", sex);
 }
 
 fn random_age() -> u8 {
