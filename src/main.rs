@@ -9,17 +9,23 @@ macro_rules! from_range {
 }
 
 #[derive(Debug, Parser)]
-#[command(version, about)]
+#[command(version, about="Generate pesel or email", long_about=None)]
 struct App {
+    name: Option<String>,
+
+    #[arg(short, long, action = clap::ArgAction::Count)]
+    debug: u8,
+
     #[command(subcommand)]
     command: Option<Commands>,
 }
 
 #[derive(Debug, Subcommand)]
-#[command(about)]
+#[command(about = "Generate pesel")]
+#[command(arg_required_else_help = true)]
 enum Commands {
     Pesel {
-        #[arg(short, long)]
+        #[arg(short, long, default_value = "3")]
         count: Option<u16>,
 
         #[arg(short, long)]
@@ -34,7 +40,6 @@ enum Commands {
         #[arg(short, long)]
         sex: Option<String>,
     },
-
     Email {
         #[arg(short, long)]
         count: Option<u16>,
@@ -55,33 +60,26 @@ fn main() {
                 day,
                 sex,
             } => {
-                let count = count.unwrap_or(10);
+                let count = count.unwrap_or(3);
                 let sex = match sex {
                     Some(sex) => match sex.to_lowercase().as_str() {
-                        "m" => Some(true),
-                        "f" => Some(false),
+                        "f" => Some(true),
+                        "m" => Some(false),
                         _ => None,
                     },
                     _ => None,
                 };
                 for _ in 0..count {
                     generate_pesel(year, month, day, sex);
-                    println!()
                 }
             }
             Commands::Email { count, pre } => {
-                let count = count.unwrap_or(10);
-                println!();
+                let count = count.unwrap_or(3);
                 if let Some(pre) = pre {
                     for _ in 0..count {
                         println!("{}", generate_pre_email(&pre));
                     }
-                } else {
-                    for _ in 0..count {
-                        println!("{}", generate_email());
-                    }
                 }
-                println!();
             }
         }
     }
@@ -97,13 +95,6 @@ fn generate_pre_email(email: &str) -> String {
     format!("{}+{}@{}", first, int, last)
 }
 
-fn generate_email() -> String {
-    let mut rng = rand::thread_rng();
-    let email: String = (0..10).map(|_| rng.gen_range(0..10).to_string()).collect();
-
-    format!("xx@xxxxxxx.xxx {}", email)
-}
-
 fn generate_pesel(year: Option<u16>, month: Option<u16>, day: Option<u16>, sex: Option<bool>) {
     let date = match chrono::NaiveDate::from_ymd_opt(
         year.unwrap_or(from_range!(1970..2024)).into(),
@@ -114,7 +105,7 @@ fn generate_pesel(year: Option<u16>, month: Option<u16>, day: Option<u16>, sex: 
         None => panic!("Invalid date"),
     };
 
-    let (y, m, d, is_genz) : (i32, i32, i32, bool)= (
+    let (y, m, d, is_genz): (i32, i32, i32, bool) = (
         date.year(),
         (date.month0() + 1).try_into().unwrap(),
         date.day().try_into().unwrap(),
@@ -144,9 +135,11 @@ fn generate_pesel(year: Option<u16>, month: Option<u16>, day: Option<u16>, sex: 
     let ran = from_range!(100..999);
     let sex = match sex {
         Some(sex) => {
-            let m = if sex {11} else {10};
-            from_range!(0..9) % m
-        },
+            let daps = (0..9)
+                .filter(|i| i % 2 == if sex { 0 } else { 1 })
+                .collect::<Vec<i32>>();
+            daps[from_range!(0..daps.len())]
+        }
         None => from_range!(0..9),
     };
     let parts = format!("{}{}{}{}{}", year, month, day, ran, sex);
@@ -162,8 +155,8 @@ fn generate_pesel(year: Option<u16>, month: Option<u16>, day: Option<u16>, sex: 
         sum => 10 - (sum % 10),
     };
 
-    println!();
-    println!("pesel {}{}", parts, control);
-    println!("date  {}", date.format("%Y-%m-%d"));
-    println!("sex   {}", if sex % 2 == 0 { "F" } else { "M" });
+    let date = date.format("%Y-%m-%d");
+    let sex = if sex % 2 == 0 { "F" } else { "M" };
+
+    println!("-> {sex}   {parts}{control}   {date}");
 }
