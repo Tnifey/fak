@@ -1,12 +1,18 @@
 use chrono::Datelike;
-use clap::{ Parser, Subcommand };
+use clap::{Parser, Subcommand};
 use rand::Rng;
+
+macro_rules! from_range {
+    ($x:expr) => {
+        rand::thread_rng().gen_range($x)
+    };
+}
 
 #[derive(Debug, Parser)]
 #[command(version, about)]
 struct App {
     #[command(subcommand)]
-    command: Option<Commands>
+    command: Option<Commands>,
 }
 
 #[derive(Debug, Subcommand)]
@@ -14,35 +20,55 @@ struct App {
 enum Commands {
     Pesel {
         #[arg(short, long)]
-        count: Option<u8>,
+        count: Option<u16>,
 
         #[arg(short, long)]
-        age: Option<u8>
+        year: Option<u16>,
+
+        #[arg(short, long)]
+        month: Option<u16>,
+
+        #[arg(short, long)]
+        day: Option<u16>,
+
+        #[arg(short, long)]
+        sex: Option<String>,
     },
+
     Email {
         #[arg(short, long)]
-        count: Option<u8>,
+        count: Option<u16>,
 
         #[arg(short, long)]
-        pre: Option<String>
-    }
+        pre: Option<String>,
+    },
 }
 
 fn main() {
     let app = App::parse();
-
-    // println!("App: {:?}", app);
-
     if let Some(name) = app.command {
         match name {
-            Commands::Pesel { count, age } => {
+            Commands::Pesel {
+                count,
+                year,
+                month,
+                day,
+                sex,
+            } => {
                 let count = count.unwrap_or(10);
-                let _age: u8 = age.unwrap_or(random_age());
+                let sex = match sex {
+                    Some(sex) => match sex.to_lowercase().as_str() {
+                        "m" => Some(true),
+                        "f" => Some(false),
+                        _ => None,
+                    },
+                    _ => None,
+                };
                 for _ in 0..count {
-                    generate_pesel();
+                    generate_pesel(year, month, day, sex);
                     println!()
                 }
-            },
+            }
             Commands::Email { count, pre } => {
                 let count = count.unwrap_or(10);
                 println!();
@@ -64,7 +90,7 @@ fn main() {
 fn generate_pre_email(email: &str) -> String {
     let [first, last] = match email.split_once('@') {
         Some((first, last)) => [first, last],
-        None => panic!("Invalid email")
+        None => panic!("Invalid email"),
     };
 
     let int = rand::random::<u32>();
@@ -78,43 +104,54 @@ fn generate_email() -> String {
     format!("xx@xxxxxxx.xxx {}", email)
 }
 
-fn generate_pesel(_age: Option<u8>) {
-    let date = chrono::NaiveDate::from_ymd_opt(rand::thread_rng().gen_range(1900..2024), rand::thread_rng().gen_range(1..12), rand::thread_rng().gen_range(1..28));
-
-    let date = match date {
+fn generate_pesel(year: Option<u16>, month: Option<u16>, day: Option<u16>, sex: Option<bool>) {
+    let date = match chrono::NaiveDate::from_ymd_opt(
+        year.unwrap_or(from_range!(1970..2024)).into(),
+        month.unwrap_or(from_range!(1..12)).into(),
+        day.unwrap_or(from_range!(1..28)).into(),
+    ) {
         Some(date) => date,
-        None => panic!("Invalid date")
+        None => panic!("Invalid date"),
     };
 
-    let y = date.year();
-    let m = date.month0() + 1;
-    let d = date.day();
-
-    let is_genz = y >= 2000;
+    let (y, m, d, is_genz) : (i32, i32, i32, bool)= (
+        date.year(),
+        (date.month0() + 1).try_into().unwrap(),
+        date.day().try_into().unwrap(),
+        date.year() >= 2000,
+    );
 
     let year = match if is_genz { y - 2000 } else { y - 1900 } {
         0 => "00".into(),
         year => match year {
-            1..=9 =>    format!("0{}", year),
-            _ => year.to_string()
-        }
+            1..=9 => format!("0{}", year),
+            _ => year.to_string(),
+        },
     };
 
-    let month = match if is_genz { m + 20 } else { m } {
-        month =>  match month {
-            0..=9 => format!("0{}", month),
-            _ => month.to_string()
-        }
+    let month = if is_genz { m + 20 } else { m };
+    let month = match month {
+        0..=9 => format!("0{}", month),
+        _ => month.to_string(),
     };
 
-    let day = if d < 10 { format!("0{}", d) } else { d.to_string() };
+    let day = if d < 10 {
+        format!("0{}", d)
+    } else {
+        d.to_string()
+    };
 
-    let ran = rand::thread_rng().gen_range(1000..9999);
-    let sex = if ran % 2 == 0 { "M" } else { "F" };
-    let parts = format!("{}{}{}{}", year, month, day, ran);
+    let ran = from_range!(100..999);
+    let sex = match sex {
+        Some(sex) => {
+            let m = if sex {11} else {10};
+            from_range!(0..9) % m
+        },
+        None => from_range!(0..9),
+    };
+    let parts = format!("{}{}{}{}{}", year, month, day, ran, sex);
     let controllist = [1, 3, 7, 9, 1, 3, 7, 9, 1, 3];
     let mut sum = 0;
-
     for (i, c) in parts.chars().enumerate() {
         let c = c.to_digit(10).unwrap();
         sum += c * controllist[i];
@@ -122,16 +159,11 @@ fn generate_pesel(_age: Option<u8>) {
 
     let control = match sum % 10 {
         0 => 0,
-        sum => 10 - (sum % 10)
+        sum => 10 - (sum % 10),
     };
 
     println!();
     println!("pesel {}{}", parts, control);
     println!("date  {}", date.format("%Y-%m-%d"));
-    println!("sex   {}", sex);
-}
-
-fn random_age() -> u8 {
-    let mut rng = rand::thread_rng();
-    rng.gen_range(14..48)
+    println!("sex   {}", if sex % 2 == 0 { "F" } else { "M" });
 }
