@@ -101,5 +101,5 @@ pub fn generate_pesel(input: PeselInput) -> Option<PeselResult> {
         sex: (if sex % 2 == 0 { "F" } else { "M" }).into(),
     };
 
-    return Some(result);
+    Some(result)
 }
