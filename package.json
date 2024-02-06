@@ -5,7 +5,5 @@
         "postbuild": "yarn run pub",
         "pub": "cp target/release/fak ~/.cargo/bin/fak"
     },
-    "dependencies": {
-        "@fakerjs/faker": "^3.0.0"
-    }
+    "dependencies": {}
 }

@@ -19,7 +19,6 @@ impl Iban {
         "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R",
         "S", "T", "U", "V", "W", "X", "Y", "Z",
     ];
-
     pub const PATTERN10: [&'static str; 9] = ["01", "02", "03", "04", "05", "06", "07", "08", "09"];
     pub const PATTERN100: [&'static str; 9] = ["001", "002", "003", "004", "005", "006", "007", "008", "009"];
 
@@ -153,17 +152,17 @@ impl Iban {
 }
 
 #[derive(Debug, Clone)]
-pub struct IBANInput {
+pub struct Input {
     pub country_code: Option<String>,
 }
 
 #[derive(Debug, Clone)]
-pub struct IBANResult {
+pub struct Output {
     pub country_code: Option<String>,
     pub iban: String,
 }
 
-pub fn generate_iban(input: IBANInput) -> Option<IBANResult> {
+pub fn generate_iban(input: Input) -> Option<Output> {
     let iban = Iban::from_country_code(input.country_code);
     let x = format!("{:?}", iban);
     let gen = iban.gen()?;

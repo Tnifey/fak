@@ -1,15 +1,11 @@
 use rand::Rng;
 
 #[derive(Debug, Clone)]
-pub struct AgeInput {
+pub struct Input {
     pub r#type: Option<String>,
 }
 
 #[derive(Debug, Clone)]
-pub struct AgeResult {
-    pub age: u8,
-}
-
 pub enum Ages {
     Child,
     Teen,
@@ -18,8 +14,13 @@ pub enum Ages {
     All,
 }
 
-pub fn generate_age(input: Option<AgeInput>) -> Option<AgeResult> {
-    let input = input.unwrap_or(AgeInput {
+#[derive(Debug, Clone)]
+pub struct Output {
+    pub age: u8,
+}
+
+pub fn generate(input: Option<Input>) -> Option<Output> {
+    let input = input.unwrap_or(Input {
         r#type: None,
     });
 
@@ -35,12 +36,12 @@ pub fn generate_age(input: Option<AgeInput>) -> Option<AgeResult> {
     };
 
     let age = match r#type {
-        Ages::Child => rand::thread_rng().gen_range(0..=12),
-        Ages::Teen => rand::thread_rng().gen_range(13..=19),
-        Ages::Adult => rand::thread_rng().gen_range(20..=65),
-        Ages::Senior => rand::thread_rng().gen_range(66..=100),
-        Ages::All => rand::thread_rng().gen_range(0..=100),
+        Ages::Child => from_range!(0..=12),
+        Ages::Teen => from_range!(13..=19),
+        Ages::Adult => from_range!(20..=65),
+        Ages::Senior => from_range!(66..=100),
+        _ => from_range!(0..=100),
     };
 
-    Some(AgeResult { age })
+    Some(Output { age })
 }

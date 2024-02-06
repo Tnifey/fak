@@ -2,40 +2,36 @@ use chrono::Datelike;
 use rand::Rng;
 
 #[derive(Debug, Clone)]
-pub struct PeselInput {
+pub struct Input {
     pub year: Option<u16>,
     pub month: Option<u16>,
     pub day: Option<u16>,
-    pub sex: Option<bool>,
-}
-
-impl PeselInput {
-    pub fn sex_from_option_string(sex: Option<String>) -> Option<bool> {
-        match sex {
-            Some(sex) => match sex.to_lowercase().as_str() {
-                "f" => Some(true),
-                "m" => Some(false),
-                _ => None,
-            },
-            _ => None,
-        }
-    }
+    pub sex: Option<String>,
 }
 
 #[derive(Debug, Clone)]
-pub struct PeselResult {
+pub struct Output {
     pub date: String,
     pub pesel: String,
     pub sex: String,
 }
 
-pub fn generate_pesel(input: PeselInput) -> Option<PeselResult> {
-    let PeselInput {
+pub fn generate(input: Input) -> Option<Output> {
+    let Input {
         year,
         month,
         day,
         sex,
     } = input;
+
+    let sex = match sex {
+        Some(sex) => match sex.to_lowercase().as_str() {
+            "f" => Some(true),
+            "m" => Some(false),
+            _ => None,
+        },
+        _ => None,
+    };
 
     let date = chrono::NaiveDate::from_ymd_opt(
         year.unwrap_or(from_range!(1970..2024)).into(),
@@ -93,7 +89,7 @@ pub fn generate_pesel(input: PeselInput) -> Option<PeselResult> {
         sum => 10 - (sum % 10),
     };
 
-    let result = PeselResult {
+    let result = Output {
         pesel: format!("{}{}", parts, control), 
         date: date.format("%Y-%m-%d").to_string(),
         sex: (if sex % 2 == 0 { "F" } else { "M" }).into(),

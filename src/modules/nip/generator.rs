@@ -1,15 +1,15 @@
 use rand::Rng;
 
-#[derive(Debug)]
-pub struct NipInput {}
+#[derive(Debug, Clone)]
+pub struct Input {}
 
-#[derive(Debug)]
-pub struct NipResult {
+#[derive(Debug, Clone)]
+pub struct Output {
     pub nip: String,
     pub checksum: u32,
 }
 
-pub fn generate_nip(_input: NipInput) -> Option<NipResult> {
+pub fn handle(input: Input) -> Option<Output> {
     let weights = [6, 5, 7, 2, 3, 4, 5, 6, 7];
     let stage = from_range!(100000000..=999999999).to_string();
 
@@ -21,10 +21,10 @@ pub fn generate_nip(_input: NipInput) -> Option<NipResult> {
         % 11;
 
     if checksum == 10 {
-        return generate_nip(_input);
+        return handle(input.clone());
     }
 
-    Some(NipResult {
+    Some(Output {
         nip: format!("{}{}", stage, checksum),
         checksum,
     })
