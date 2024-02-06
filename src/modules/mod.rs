@@ -10,6 +10,6 @@ pub mod nip;
 #[path = "./regon/mod.rs"]
 pub mod regon;
 
-#[path = "./iban/mod.rs"]
-pub mod iban;
+// #[path = "./iban/mod.rs"]
+// pub mod iban;
 

@@ -1,4 +1,5 @@
 use rand::Rng;
+use regex::Regex;
 
 #[derive(Debug, Clone)]
 pub struct Bban {
@@ -20,7 +21,9 @@ impl Iban {
         "S", "T", "U", "V", "W", "X", "Y", "Z",
     ];
     pub const PATTERN10: [&'static str; 9] = ["01", "02", "03", "04", "05", "06", "07", "08", "09"];
-    pub const PATTERN100: [&'static str; 9] = ["001", "002", "003", "004", "005", "006", "007", "008", "009"];
+    pub const PATTERN100: [&'static str; 9] = [
+        "001", "002", "003", "004", "005", "006", "007", "008", "009",
+    ];
 
     pub const COUNTRY_CODES: [&'static str; 1] = ["pl"];
 
@@ -62,16 +65,16 @@ impl Iban {
             country: "CZ".into(),
             total: 24,
             bban: vec![
-               Bban {
-                r#type: "n".to_string(),
-                count: 10,
+                Bban {
+                    r#type: "n".to_string(),
+                    count: 10,
                 },
                 Bban {
-                r#type: "n".to_string(),
-                count: 10,
+                    r#type: "n".to_string(),
+                    count: 10,
                 },
             ],
-            format: "CZkk bbbb ssss sscc cccc cccc".into()
+            format: "CZkk bbbb ssss sscc cccc cccc".into(),
         }
     }
 
@@ -98,17 +101,16 @@ impl Iban {
     }
 
     pub fn to_digit_string(s: String) -> String {
-        // let ohfuckregexp = /[A-Z]/gi;
-        let mut s = s.clone();
-        for c in s.clone().chars() {
+        let s = s.chars();
+        s.map(|c| {
             if c.is_alphabetic() {
-                let c = c.to_uppercase().to_string();
-                let c = c.chars().next().unwrap();
-                let c = c as u32 - 55;
-                s = s.replace(&c.to_string(), &c.to_string());
+                println!("{}", c);
+                c.to_uppercase().to_string()
+            } else {
+                c.to_string()
             }
-        }
-        s
+        })
+        .collect::<String>()
     }
 
     pub fn gen(&self) -> Option<String> {
@@ -135,6 +137,7 @@ impl Iban {
         }
 
         let digit_string = Iban::to_digit_string(format!("{s}{}00", self.country));
+        println!("digit_string_out: {}", digit_string);
         let mod97 = Iban::mod97(digit_string.clone());
 
         let checksum = 98 - mod97;

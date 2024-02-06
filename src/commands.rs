@@ -8,7 +8,7 @@ pub enum Commands {
     Nip(nip::command::Arguments),
     Pesel (pesel::command::Arguments),
     Regon(regon::command::Arguments),
-    Iban(iban::command::Arguments),
+    // Iban(iban::command::Arguments),
 }
 
 pub fn commands(command: Commands) {
@@ -17,6 +17,6 @@ pub fn commands(command: Commands) {
         Commands::Pesel(args) => pesel::command::handle(args),
         Commands::Nip(args) => nip::command::handle(args),
         Commands::Regon(args) => regon::command::handle(args),
-        Commands::Iban(args) => iban::command::handle(args),
+        // Commands::Iban(args) => iban::command::handle(args),
     }
 }
