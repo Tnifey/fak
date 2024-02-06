@@ -6,6 +6,7 @@ mod macros;
 mod generate_pesel;
 mod generate_email;
 mod generate_nip;
+mod generate_regon;
 
 #[derive(Debug, Parser)]
 #[command(version, about="Generate pesel or email", long_about=None)]
@@ -43,6 +44,10 @@ enum Commands {
         raw: Option<bool>,
     },
     Nip {
+        #[arg(short, long, default_value = "3")]
+        count: Option<u16>,
+    },
+    Regon {
         #[arg(short, long, default_value = "3")]
         count: Option<u16>,
     },
@@ -98,6 +103,15 @@ fn commands(command: Commands) {
                 let result = generate_nip::generate_nip(generate_nip::NipInput {});
                 if let Some(result) = result {
                     println!("{}", result.nip)
+                }
+            }
+        }
+        Commands::Regon { count } => {
+            let count = count.unwrap_or(3);
+            for _ in 0..count {
+                let result = generate_regon::generate_regon(generate_regon::RegonInput {});
+                if let Some(result) = result {
+                    println!("{}", result.regon)
                 }
             }
         }
