@@ -1,2 +1,3 @@
-pub mod generator;
 pub mod command;
+pub mod consts;
+pub mod generator;

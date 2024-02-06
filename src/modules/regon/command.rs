@@ -1,3 +1,4 @@
+use super::generator::{generate, Input};
 use clap::*;
 
 #[derive(Debug, Clone, Parser)]
@@ -11,8 +12,7 @@ pub fn handle(args: Arguments) {
 
     let count = count.unwrap_or(3);
     for _ in 0..count {
-        let result =
-            super::generator::handle(super::generator::Input {});
+        let result = generate(Input {});
         if let Some(result) = result {
             println!("{}", result.regon)
         }

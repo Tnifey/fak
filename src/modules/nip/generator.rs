@@ -9,7 +9,7 @@ pub struct Output {
     pub checksum: u32,
 }
 
-pub fn handle(input: Input) -> Option<Output> {
+pub fn generate(input: Input) -> Option<Output> {
     let weights = [6, 5, 7, 2, 3, 4, 5, 6, 7];
     let stage = from_range!(100000000..=999999999).to_string();
 
@@ -21,7 +21,7 @@ pub fn handle(input: Input) -> Option<Output> {
         % 11;
 
     if checksum == 10 {
-        return handle(input.clone());
+        return generate(input.clone());
     }
 
     Some(Output {

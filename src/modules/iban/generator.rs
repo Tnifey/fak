@@ -162,7 +162,7 @@ pub struct Output {
     pub iban: String,
 }
 
-pub fn generate_iban(input: Input) -> Option<Output> {
+pub fn generate(input: Input) -> Option<Output> {
     let iban = Iban::from_country_code(input.country_code);
     let x = format!("{:?}", iban);
     let gen = iban.gen()?;
