@@ -1,0 +1,8 @@
+{
+    "scripts": {
+        "watch": "cargo watch build -r",
+        "build": "cargo build -r",
+        "postbuild": "yarn run pub",
+        "pub": "cp target/release/fak ~/.cargo/bin/fak"
+    }
+}

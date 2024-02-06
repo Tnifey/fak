@@ -5,6 +5,7 @@ mod macros;
 
 mod generate_pesel;
 mod generate_email;
+mod generate_nip;
 
 #[derive(Debug, Parser)]
 #[command(version, about="Generate pesel or email", long_about=None)]
@@ -41,6 +42,10 @@ enum Commands {
         #[arg(short, long)]
         raw: Option<bool>,
     },
+    Nip {
+        #[arg(short, long, default_value = "3")]
+        count: Option<u16>,
+    },
     Email {
         #[arg(short, long)]
         count: Option<u16>,
@@ -53,43 +58,57 @@ enum Commands {
 fn main() {
     let app = App::parse();
     if let Some(command) = app.command {
-        match command {
-            Commands::Pesel {
-                count,
-                year,
-                month,
-                day,
-                sex,
-                raw,
-            } => {
-                let raw = raw.unwrap_or(false);
-                let count = count.unwrap_or(3);
-                let input = generate_pesel::PeselInput {
-                    year,
-                    month,
-                    day,
-                    sex: generate_pesel::PeselInput::sex_from_option_string(sex),
-                };
-                for _ in 0..count {
-                    let result = generate_pesel::generate_pesel(input.clone());
-                    if let Some(result) = result {
-                        match raw {
-                            true => println!("{}", result.pesel),
-                            _ => println!("→ {} {}  →  {}", result.sex, result.date, result.pesel),
-                        }
-                    }
-                }
-            }
-            Commands::Email { count, pre } => {
-                let count = count.unwrap_or(3);
-                if let Some(pre) = pre {
-                    for _ in 0..count {
-                        let result = generate_email::generate_pre_email(&pre);
-                        println!("{}", result);
-                    }
-                }
-            },
-        }
+        commands(command);
+    } else {
+        println!("Invalid command");
     }
 }
 
+fn commands(command: Commands) {
+    match command {
+        Commands::Pesel {
+            count,
+            year,
+            month,
+            day,
+            sex,
+            raw,
+        } => {
+            let raw = raw.unwrap_or(false);
+            let count = count.unwrap_or(3);
+            let input = generate_pesel::PeselInput {
+                year,
+                month,
+                day,
+                sex: generate_pesel::PeselInput::sex_from_option_string(sex),
+            };
+            for _ in 0..count {
+                let result = generate_pesel::generate_pesel(input.clone());
+                if let Some(result) = result {
+                    match raw {
+                        true => println!("{}", result.pesel),
+                        _ => println!("→ {} {}  →  {}", result.sex, result.date, result.pesel),
+                    }
+                }
+            }
+        }
+        Commands::Nip { count } => {
+            let count = count.unwrap_or(3);
+            for _ in 0..count {
+                let result = generate_nip::generate_nip(generate_nip::NipInput {});
+                if let Some(result) = result {
+                    println!("{}", result.nip)
+                }
+            }
+        }
+        Commands::Email { count, pre } => {
+            let count = count.unwrap_or(3);
+            if let Some(pre) = pre {
+                for _ in 0..count {
+                    let result = generate_email::generate_pre_email(&pre);
+                    println!("{}", result);
+                }
+            }
+        },
+    }
+}

@@ -36,7 +36,6 @@ pub fn generate_pesel(input: PeselInput) -> Option<PeselResult> {
         month,
         day,
         sex,
-        ..
     } = input;
 
     let date = chrono::NaiveDate::from_ymd_opt(
