@@ -5,6 +5,7 @@ mod macros;
 mod commands;
 #[path = "modules/mod.rs"]
 pub mod modules;
+pub mod types;
 
 #[derive(Debug, Parser)]
 #[command(about="Generate fake data from thin air", long_about=None, version=None, author=None)]

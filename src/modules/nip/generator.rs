@@ -1,13 +1,9 @@
 use rand::Rng;
 
-#[derive(Debug, Clone)]
-pub struct Input {}
+use crate::types::Output;
 
 #[derive(Debug, Clone)]
-pub struct Output {
-    pub nip: String,
-    pub checksum: u32,
-}
+pub struct Input {}
 
 pub fn generate(input: Input) -> Option<Output> {
     let weights = [6, 5, 7, 2, 3, 4, 5, 6, 7];
@@ -24,8 +20,10 @@ pub fn generate(input: Input) -> Option<Output> {
         return generate(input.clone());
     }
 
+    let value = format!("{}{}", stage, checksum);
+
     Some(Output {
-        nip: format!("{}{}", stage, checksum),
-        checksum,
+        value,
+        meta: Default::default(),
     })
 }

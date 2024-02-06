@@ -12,7 +12,7 @@ pub fn handle(args: Arguments) {
     for _ in 0..count {
         let result = super::generator::generate(super::generator::Input {});
         if let Some(result) = result {
-            println!("{}", result.nip)
+            println!("{}", result.value)
         }
     }
 }

@@ -1,3 +1,4 @@
+use crate::types::{Output, Pretty};
 use chrono::Datelike;
 use rand::Rng;
 
@@ -9,11 +10,11 @@ pub struct Input {
     pub sex: Option<String>,
 }
 
-#[derive(Debug, Clone)]
-pub struct Output {
-    pub date: String,
-    pub pesel: String,
-    pub sex: String,
+
+impl Pretty for Output {
+    fn pretty(&self) -> String {
+        format!("{} -> {:?}", self.value, self.meta)
+    }
 }
 
 pub fn generate(input: Input) -> Option<Output> {
@@ -37,7 +38,8 @@ pub fn generate(input: Input) -> Option<Output> {
         year.unwrap_or(from_range!(1970..2024)).into(),
         month.unwrap_or(from_range!(1..12)).into(),
         day.unwrap_or(from_range!(1..28)).into(),
-    ).unwrap();
+    )
+    .unwrap();
 
     let (y, m, d, is_genz): (i32, i32, i32, bool) = (
         date.year(),
@@ -90,9 +92,8 @@ pub fn generate(input: Input) -> Option<Output> {
     };
 
     let result = Output {
-        pesel: format!("{}{}", parts, control), 
-        date: date.format("%Y-%m-%d").to_string(),
-        sex: (if sex % 2 == 0 { "F" } else { "M" }).into(),
+        value: format!("{}{}", parts, control),
+        meta: Default::default(),
     };
 
     Some(result)

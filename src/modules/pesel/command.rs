@@ -45,8 +45,9 @@ pub fn handle(args: Arguments) {
         let result = generate(input.clone());
         if let Some(result) = result {
             match raw {
-                true => println!("{}", result.pesel),
-                _ => println!("→ {} {}  →  {}", result.sex, result.date, result.pesel),
+                true => println!("{}", result.value),
+                _ => println!("{}", result.value),
+                // _ => println!("→ {} {}  →  {}", result.sex, result.date, result.pesel),
             }
         }
     }
