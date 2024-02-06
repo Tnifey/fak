@@ -98,6 +98,7 @@ impl Iban {
     }
 
     pub fn to_digit_string(s: String) -> String {
+        // let ohfuckregexp = /[A-Z]/gi;
         let mut s = s.clone();
         for c in s.clone().chars() {
             if c.is_alphabetic() {
@@ -133,8 +134,8 @@ impl Iban {
             s = s.chars().take(count as usize).collect::<String>();
         }
 
-        let ditit_string = Iban::to_digit_string(format!("{s}{}00", self.country));
-        let mod97 = Iban::mod97(ditit_string.clone());
+        let digit_string = Iban::to_digit_string(format!("{s}{}00", self.country));
+        let mod97 = Iban::mod97(digit_string.clone());
 
         let checksum = 98 - mod97;
 
