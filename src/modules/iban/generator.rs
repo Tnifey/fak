@@ -87,29 +87,28 @@ impl Iban {
         Iban::PATTERN100[rand::thread_rng().gen_range(0..Iban::PATTERN100.len())].to_string()
     }
 
-    // pub fn mod97(digit_str: String) -> u32 {
-    //     let mut m = 0;
-    //     for element in digit_str.chars() {
-    //         let digit = element.to_uppercase().to_string().chars().next();
-    //         match 
+    pub fn mod97(digit_str: String) -> u32 {
+        let mut m = 0;
+        for element in digit_str.chars() {
+            if let Some(element) = element.to_digit(10) {
+                m = (m * 10 + element) % 97;
+            }
+        }
+        m
+    }
 
-    //         m = (m * 10 + element.to_digit(10).unwrap_or(0)) % 97;
-    //     }
-    //     m
-    // }
-
-    // pub fn to_digit_string(s: String) -> String {
-    //     let mut s = s.clone();
-    //     for c in s.clone().chars() {
-    //         if c.is_alphabetic() {
-    //             let c = c.to_uppercase().to_string();
-    //             let c = c.chars().next().unwrap();
-    //             let c = c as u32 - 55;
-    //             s = s.replace(&c.to_string(), &c.to_string());
-    //         }
-    //     }
-    //     s
-    // }
+    pub fn to_digit_string(s: String) -> String {
+        let mut s = s.clone();
+        for c in s.clone().chars() {
+            if c.is_alphabetic() {
+                let c = c.to_uppercase().to_string();
+                let c = c.chars().next().unwrap();
+                let c = c as u32 - 55;
+                s = s.replace(&c.to_string(), &c.to_string());
+            }
+        }
+        s
+    }
 
     pub fn gen(&self) -> Option<String> {
         let mut s: String = "".into();
@@ -134,18 +133,18 @@ impl Iban {
             s = s.chars().take(count as usize).collect::<String>();
         }
 
-        // let ditit_string = Iban::to_digit_string(format!("{s}{}00", self.country));
-        // let mod97 = Iban::mod97(ditit_string.clone());
+        let ditit_string = Iban::to_digit_string(format!("{s}{}00", self.country));
+        let mod97 = Iban::mod97(ditit_string.clone());
 
-        // let checksum = 98 - mod97;
+        let checksum = 98 - mod97;
 
-        // let checksum = if checksum < 10 {
-        //     format!("0{}", checksum)
-        // } else {
-        //     checksum.to_string()
-        // };
+        let checksum = if checksum < 10 {
+            format!("0{}", checksum)
+        } else {
+            checksum.to_string()
+        };
 
-        // println!("{}{checksum}{s}", self.country);
+        println!("{}{checksum}{s}", self.country);
 
         None
     }

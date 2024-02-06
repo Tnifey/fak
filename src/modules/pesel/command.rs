@@ -4,7 +4,7 @@ use super::generator::{generate, Input};
 
 #[derive(Debug, Clone, Parser)]
 pub struct Arguments {
-    #[arg(short, long, default_value = "3")]
+    #[arg(short, long, default_value = "1")]
     count: Option<u16>,
 
     #[arg(short, long)]
@@ -18,9 +18,6 @@ pub struct Arguments {
 
     #[arg(short, long)]
     sex: Option<String>,
-
-    #[arg(short, long)]
-    raw: Option<bool>,
 }
 
 pub fn handle(args: Arguments) {
@@ -30,11 +27,9 @@ pub fn handle(args: Arguments) {
         month,
         day,
         sex,
-        raw,
     } = args;
 
-    let raw = raw.unwrap_or(false);
-    let count = count.unwrap_or(3);
+    let count = count.unwrap_or(1);
     let input = Input {
         year,
         month,
@@ -44,11 +39,7 @@ pub fn handle(args: Arguments) {
     for _ in 0..count {
         let result = generate(input.clone());
         if let Some(result) = result {
-            match raw {
-                true => println!("{}", result.value),
-                _ => println!("{}", result.value),
-                // _ => println!("→ {} {}  →  {}", result.sex, result.date, result.pesel),
-            }
+            println!("{}", result.value)
         }
     }
 }

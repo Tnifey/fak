@@ -3,7 +3,7 @@ use clap::*;
 
 #[derive(Debug, Clone, Parser)]
 pub struct Arguments {
-    #[arg(short, long, default_value = "3")]
+    #[arg(short, long, default_value = "1")]
     count: Option<u16>,
 
     #[arg(long)]
@@ -16,7 +16,7 @@ pub fn handle(args: Arguments) {
     for _ in 0..count {
         let result = generate(Input { country_code: cc.clone() });
         if let Some(result) = result {
-            println!("{}", result.iban)
+            println!("{:?}", result)
         }
     }
 }

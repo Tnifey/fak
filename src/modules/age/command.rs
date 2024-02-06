@@ -13,6 +13,6 @@ pub fn handle(args: Arguments) {
     };
     let result = super::generator::generate(Some(input));
     if let Some(result) = result {
-        println!("{}", result.age)
+        println!("{}", result.value)
     }
 }

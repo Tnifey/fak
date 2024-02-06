@@ -1,4 +1,5 @@
 use rand::Rng;
+use crate::types::Output;
 
 #[derive(Debug, Clone)]
 pub struct Input {
@@ -12,11 +13,6 @@ pub enum Ages {
     Adult,
     Senior,
     All,
-}
-
-#[derive(Debug, Clone)]
-pub struct Output {
-    pub age: u8,
 }
 
 pub fn generate(input: Option<Input>) -> Option<Output> {
@@ -35,13 +31,13 @@ pub fn generate(input: Option<Input>) -> Option<Output> {
         _ => Ages::All,
     };
 
-    let age = match r#type {
+    let value = match r#type {
         Ages::Child => from_range!(0..=12),
         Ages::Teen => from_range!(13..=19),
         Ages::Adult => from_range!(20..=65),
         Ages::Senior => from_range!(66..=100),
         _ => from_range!(0..=100),
-    };
+    }.to_string();
 
-    Some(Output { age })
+    Some(Output::value_only(value))
 }
