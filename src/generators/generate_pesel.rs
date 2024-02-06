@@ -22,7 +22,6 @@ impl PeselInput {
     }
 }
 
-
 #[derive(Debug, Clone)]
 pub struct PeselResult {
     pub date: String,
