@@ -39,5 +39,5 @@ pub fn generate(input: Option<Input>) -> Option<Output> {
         _ => from_range!(0..=100),
     }.to_string();
 
-    Some(Output::value_only(value))
+    Some(Output::new(value))
 }

@@ -1,4 +1,4 @@
-use crate::types::{Output, Pretty};
+use crate::types::Output;
 use chrono::Datelike;
 use rand::Rng;
 
@@ -10,9 +10,12 @@ pub struct Input {
     pub sex: Option<String>,
 }
 
+trait FormatPretty {
+    fn format_pretty(&self) -> String;
+}
 
-impl Pretty for Output {
-    fn pretty(&self) -> String {
+impl FormatPretty for Output {
+    fn format_pretty(&self) -> String {
         format!("{} -> {:?}", self.value, self.meta)
     }
 }

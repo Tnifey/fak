@@ -5,5 +5,9 @@
         "postbuild": "yarn run pub",
         "pub": "cp target/release/fak ~/.cargo/bin/fak"
     },
-    "dependencies": {}
+    "dependencies": {},
+    "devDependencies": {
+        "tsx": "^4.7.0",
+        "typescript": "^5.3.3"
+    }
 }

@@ -1,7 +1,7 @@
 use clap::Parser;
 
 #[macro_use]
-mod macros;
+mod utils;
 mod commands;
 #[path = "modules/mod.rs"]
 pub mod modules;
