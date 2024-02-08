@@ -15,8 +15,7 @@ pub struct Arguments {
 
 pub fn handle(args: Arguments) {
     let Arguments { count, cc, pretty } = args;
-    let count = count.unwrap_or(3);
-    for _ in 0..count {
+    for _ in 0..count.unwrap_or(3) {
         let result = generate(Input { country_code: cc.clone() });
         if let Some(result) = result {
             if pretty.is_some_and(|x| x) {

@@ -28,15 +28,13 @@ pub fn handle(args: Arguments) {
         day,
         sex,
     } = args;
-
-    let count = count.unwrap_or(1);
     let input = Input {
         year,
         month,
         day,
         sex,
     };
-    for _ in 0..count {
+    for _ in 0..count.unwrap_or(1) {
         let result = generate(input.clone());
         if let Some(result) = result {
             println!("{}", result.value)
