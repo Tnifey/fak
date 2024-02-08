@@ -141,7 +141,6 @@ pub fn generate(input: Input) -> Option<Output> {
 
 // i am too stoopid to understand that at the moment
 pub fn format_pretty(output: Output) -> String {
-    println!("pretty");
     let iban = output.value.clone();
     let bban = iban.chars().skip(4).collect::<String>();
     let country = iban.chars().take(2).collect::<String>();
