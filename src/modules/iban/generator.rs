@@ -1,6 +1,6 @@
 use rand::Rng;
 use crate::{types::Output, utils::code_point};
-use super::ibans::Ibans;
+use super::per_country::Ibans;
 
 #[derive(Debug, Clone)]
 pub struct Bban {
