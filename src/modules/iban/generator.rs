@@ -139,6 +139,7 @@ pub fn generate(input: Input) -> Option<Output> {
     Some(result)
 }
 
+// i am too stoopid to understand that at the moment
 pub fn format_pretty(output: Output) -> String {
     println!("pretty");
     let iban = output.value.clone();
