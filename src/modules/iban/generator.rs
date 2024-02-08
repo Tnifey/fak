@@ -31,15 +31,15 @@ impl Iban {
     }
 
     pub fn rand_alpha() -> String {
-        Self::ALPHA[from_range!(0..Self::ALPHA.len())].to_string()
+        Self::ALPHA[from_range!(0..Self::ALPHA.len())].into()
     }
 
     pub fn rand_pattern10() -> String {
-        Self::PATTERN10[from_range!(0..Self::PATTERN10.len())].to_string()
+        Self::PATTERN10[from_range!(0..Self::PATTERN10.len())].into()
     }
 
     pub fn rand_pattern100() -> String {
-        Self::PATTERN100[from_range!(0..Self::PATTERN100.len())].to_string()
+        Self::PATTERN100[from_range!(0..Self::PATTERN100.len())].into()
     }
 
     pub fn mod97(digit_str: String) -> u32 {
@@ -56,16 +56,16 @@ impl Iban {
         let s = s.chars();
         s.map(|c| {
             if !c.is_alphabetic() {
-                return c.to_string();
+                return c.into();
             }
             let c = c.to_uppercase().next();
             if let Some(c) = c {
                 return match code_point(c) {
                     Some(c) => (c - 55).to_string(),
-                    None => "".to_string(),
+                    None => "".into(),
                 }
             }
-            "".to_string()
+            "".into()
         })
         .collect::<String>()
     }
