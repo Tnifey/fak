@@ -154,10 +154,11 @@ pub fn format_pretty(output: Output) -> String {
         .collect::<Vec<String>>()
         .join(" ");
     [
-        format!("IBAN:     {}", iban),
-        format!("Country:  {}", country),
-        format!("Checksum: {}", checksum),
-        format!("BBAN:     {}", bban),
-        format!("Pretty:   {}", pretty),
+        format!("raw:         {}", iban.chars().skip(2).collect::<String>()),
+        format!("IBAN:      {}", iban),
+        format!("Country:   {}", country),
+        format!("Checksum:    {}", checksum),
+        format!("BBAN:          {}", bban),
+        format!("Pretty:    {}", pretty),
     ].join("\n")
 }
