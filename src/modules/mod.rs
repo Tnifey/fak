@@ -13,3 +13,5 @@ pub mod regon;
 #[path = "./iban/mod.rs"]
 pub mod iban;
 
+#[path = "./bic/mod.rs"]
+pub mod bic;
