@@ -1,5 +1,5 @@
 use rand::{
-    distributions::{Alphanumeric, DistString},
+    distributions::Alphanumeric,
     Rng,
 };
 
