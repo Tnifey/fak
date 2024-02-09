@@ -1,125 +1,53 @@
+use super::per_country::{iban_from_country_code, Iban};
+use super::utils::{mod97, rand_alpha, rand_pattern10, rand_pattern100, to_digit_string};
+use crate::types::Output;
 use rand::Rng;
-use crate::{types::Output, utils::code_point};
-use super::per_country::Ibans;
 
-#[derive(Debug, Clone)]
-pub struct Bban {
-    pub r#type: String,
-    pub count: u32,
-}
-
-#[derive(Debug, Clone)]
-pub struct Iban {
-    pub country: String,
-    pub total: u32,
-    pub bban: Vec<Bban>,
-    pub format: String,
-}
-
-impl Iban {
-    pub const ALPHA: [&'static str; 26] = [
-        "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R",
-        "S", "T", "U", "V", "W", "X", "Y", "Z",
-    ];
-    pub const PATTERN10: [&'static str; 9] = ["01", "02", "03", "04", "05", "06", "07", "08", "09"];
-    pub const PATTERN100: [&'static str; 9] = [
-        "001", "002", "003", "004", "005", "006", "007", "008", "009",
-    ];
-
-    pub fn from_country_code(cc: Option<String>) -> Self {
-        Ibans::from_country_code(cc)
-    }
-
-    pub fn rand_alpha() -> String {
-        Self::ALPHA[from_range!(0..Self::ALPHA.len())].into()
-    }
-
-    pub fn rand_pattern10() -> String {
-        Self::PATTERN10[from_range!(0..Self::PATTERN10.len())].into()
-    }
-
-    pub fn rand_pattern100() -> String {
-        Self::PATTERN100[from_range!(0..Self::PATTERN100.len())].into()
-    }
-
-    pub fn mod97(digit_str: String) -> u32 {
-        let mut m = 0;
-        for element in digit_str.chars() {
-            if let Some(element) = element.to_digit(10) {
-                m = (m * 10 + element) % 97;
-            }
-        }
-        m
-    }
-
-    pub fn to_digit_string(s: String) -> String {
-        let s = s.chars();
-        s.map(|c| {
-            if !c.is_alphabetic() {
-                return c.into();
-            }
-            let c = c.to_uppercase().next();
-            if let Some(c) = c {
-                return match code_point(c) {
-                    Some(c) => (c - 55).to_string(),
-                    None => "".into(),
+pub fn generator(iban: Iban) -> Option<String> {
+    let mut s = "".to_string();
+    let mut count = 0;
+    for bban in iban.bban.iter() {
+        let mut c = bban.count;
+        count += bban.count;
+        while c > 0 {
+            match bban.r#type.as_str() {
+                "a" => s += &rand_alpha(),
+                "c" => {
+                    if probability!(0.8) {
+                        s += &rand_alpha();
+                    } else {
+                        s += &from_range!(0..10).to_string();
+                    }
                 }
-            }
-            "".into()
-        })
-        .collect::<String>()
-    }
-
-    pub fn gen(&self) -> Option<String> {
-        let mut s = "".to_string();
-        let mut count = 0;
-        for bban in self.bban.iter() {
-            let mut c = bban.count;
-            count += bban.count;
-            while c > 0 {
-                match bban.r#type.as_str() {
-                    "a" => s += &Self::rand_alpha(),
-                    "c" => {
-                        if probability!(0.8) {
-                            s += &Self::rand_alpha();
+                _ => {
+                    if c >= 3 && probability!(0.3) {
+                        if probability!(0.5) {
+                            s += &rand_pattern100();
+                            c -= 2;
                         } else {
-                            s += &from_range!(0..10).to_string();
+                            s += &rand_pattern10();
+                            c -= 1;
                         }
+                    } else {
+                        s += &from_range!(0..10).to_string();
                     }
-                    _ => {
-                        if c >= 3 && probability!(0.3) {
-                            if probability!(0.5) {
-                                s += &Self::rand_pattern100();
-                                c -= 2;
-                            } else {
-                                s += &Self::rand_pattern10();
-                                c -= 1;
-                            }
-                        } else {
-                            s += &from_range!(0..10).to_string();
-                        }
-                    }
-                };
-                c -= 1;
-            }
-            s = s.chars().take(count as usize).collect::<String>();
+                }
+            };
+            c -= 1;
         }
-
-        let country = self.country.clone();
-        let format = format!("{s}{}00", self.country);
-        let digit_string = Self::to_digit_string(format);
-        let mod97 = Self::mod97(digit_string.clone());
-
-        let checksum = 98 - mod97;
-
-        let checksum = if checksum < 10 {
-            format!("0{}", checksum)
-        } else {
-            checksum.to_string()
-        };
-
-        Some(format!("{country}{checksum}{s}"))
+        s = s.chars().take(count as usize).collect::<String>();
     }
+
+    let country = iban.country.clone();
+    let format = format!("{s}{}00", iban.country);
+    let digit_string = to_digit_string(format);
+    let checksum = 98 - mod97(digit_string.clone());
+    let checksum = match checksum {
+        0..=9 => format!("0{}", checksum),
+        _ => checksum.to_string(),
+    };
+
+    Some(format!("{country}{checksum}{s}"))
 }
 
 #[derive(Debug, Clone)]
@@ -128,8 +56,8 @@ pub struct Input {
 }
 
 pub fn generate(input: Input) -> Option<Output> {
-    let generator = Iban::from_country_code(input.country_code);
-    let iban = generator.gen()?;
+    let iban = iban_from_country_code(input.country_code);
+    let iban = generator(iban)?;
 
     let result = Output {
         value: iban,
@@ -139,7 +67,6 @@ pub fn generate(input: Input) -> Option<Output> {
     Some(result)
 }
 
-// i am too stoopid to understand that at the moment
 pub fn format_pretty(output: Output) -> String {
     let iban = output.value.clone();
     let bban = iban.chars().skip(4).collect::<String>();
@@ -160,5 +87,6 @@ pub fn format_pretty(output: Output) -> String {
         format!("Checksum:    {}", checksum),
         format!("BBAN:          {}", bban),
         format!("Pretty:    {}", pretty),
-    ].join("\n")
+    ]
+    .join("\n")
 }
