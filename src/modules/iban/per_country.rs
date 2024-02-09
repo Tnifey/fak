@@ -16,7 +16,7 @@ pub struct Iban {
     pub format: String,
 }
 
-pub const ISO3166: [&str; 68] = [
+pub const COUNTRY_CODES: [&str; 68] = [
     "al", "ad", "at", "az", "bh", "be", "ba", "br", "bg", "cr", "hr", "cy", "cz", "dk", "do", "tl",
     "ee", "fo", "fi", "fr", "ge", "de", "gi", "gr", "gl", "gt", "hu", "is", "ie", "il", "it", "jo",
     "kz", "xk", "kw", "lv", "lb", "li", "lt", "lu", "mk", "mt", "mr", "mu", "mc", "md", "me", "nl",
@@ -25,12 +25,12 @@ pub const ISO3166: [&str; 68] = [
 ];
 
 pub fn random_country_code() -> String {
-    ISO3166[from_range!(0..ISO3166.len())].to_string()
+    COUNTRY_CODES[from_range!(0..COUNTRY_CODES.len())].to_string()
 }
 
 pub fn iban_from_country_code(cc: Option<String>) -> Iban {
     let cc = cc.unwrap_or(random_country_code()).to_lowercase();
-    let cc = ISO3166
+    let cc = COUNTRY_CODES
         .iter()
         .find(|&c| c == &cc)
         .map(|c| c.to_string())
