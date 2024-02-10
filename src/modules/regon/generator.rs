@@ -19,14 +19,12 @@ pub fn generate(_input: Input) -> Option<Output> {
 
     let checksum = if checksum == 10 { 0 } else { checksum };
 
-    let result = Output {
-        value: format!("{}{}", stage, checksum),
-        meta: meta![
-            ("voivodeship".into(), voivodeship.to_string()),
-            ("stage".into(), stage.to_string()),
-            ("checksum".into(), checksum.to_string()),
+    Output::meta(
+        &format!("{}{}", stage, checksum),
+        vec![
+            ("voivodeship", &voivodeship),
+            ("stage", &stage),
+            ("checksum", &checksum.to_string()),
         ],
-    };
-
-    Some(result)
+    ).some()
 }

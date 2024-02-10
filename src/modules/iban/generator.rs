@@ -25,18 +25,16 @@ pub fn generate(input: Input) -> Option<Output> {
         .collect::<Vec<String>>()
         .join(" ");
 
-    let result = Output {
-        value,
-        meta: meta!(
-            ("IBAN".into(), iban),
-            ("Country".into(), country),
-            ("Checksum".into(), checksum),
-            ("BBAN".into(), bban),
-            ("Pretty".into(), pretty),
-        ),
-    };
-
-    Some(result)
+    Output::meta(
+        &value.to_string(),
+        vec![
+            ("IBAN", &iban),
+            ("Country", &country),
+            ("Checksum", &checksum),
+            ("BBAN", &bban),
+            ("Pretty", &pretty),
+        ],
+    ).some()
 }
 
 pub fn generator(iban: Iban) -> Option<String> {

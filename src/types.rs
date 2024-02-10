@@ -6,10 +6,26 @@ pub struct Output {
 
 impl Output {
     pub fn new(value: String) -> Self {
+        Self { value, meta: None }
+    }
+
+    pub fn meta(value: &str, meta: Vec<(&str, &str)>) -> Self {
         Self {
-            value,
-            meta: None,
+            value: value.to_string(),
+            meta: Some(
+                meta.iter()
+                    .map(|(k, v)| (k.to_string(), v.to_string()))
+                    .collect(),
+            ),
         }
+    }
+
+    pub fn some(self) -> Option<Self> {
+        Some(self)
+    }
+
+    pub fn none(self) -> Option<Self> {
+        None
     }
 
     pub fn print(&self, pretty: bool) {

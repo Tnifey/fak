@@ -2,10 +2,10 @@ use crate::types::Output;
 use rand::Rng;
 
 #[derive(Debug, Clone)]
-pub struct Input { }
+pub struct Input {}
 
 pub fn generate(input: Option<Input>) -> Option<Output> {
-    let _ = input.unwrap_or(Input { });
+    let _ = input.unwrap_or(Input {});
 
     let preset = super::presets::random_preset();
     let (prefix, size) = (preset.random_prefix(), preset.random_size());
@@ -35,16 +35,14 @@ pub fn generate(input: Option<Input>) -> Option<Output> {
 
     let credit_card = format!("{card_number}{checksum}");
 
-    let output = Output {
-        value: credit_card.clone(),
-        meta: meta!(
-            ("Vendor".into(), preset.vendor),
-            ("Prefix".into(), prefix),
-            ("Size".into(), size.to_string()),
-            ("Checksum".into(), checksum.to_string()),
-            ("Card number".into(), credit_card),
-        ),
-    };
-
-    Some(output)
+    Output::meta(
+        &credit_card,
+        vec![
+            ("Vendor", &preset.vendor),
+            ("Prefix", &prefix),
+            ("Size", &size.to_string()),
+            ("Checksum", &checksum.to_string()),
+            ("Card number", &credit_card),
+        ],
+    ).some()
 }
