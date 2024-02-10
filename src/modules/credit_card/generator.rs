@@ -38,11 +38,11 @@ pub fn generate(input: Option<Input>) -> Output {
     Output::meta(
         &credit_card,
         vec![
-            ("Vendor", &preset.vendor),
-            ("Prefix", &prefix),
-            ("Size", &size.to_string()),
-            ("Checksum", &checksum.to_string()),
-            ("Card number", &credit_card),
+            ("Vendor      ", &preset.vendor),
+            ("Prefix      ", &prefix),
+            ("Size        ", &size.to_string()),
+            ("Checksum    ", &checksum.to_string()),
+            ("Card number ", &credit_card),
         ],
     )
 }
