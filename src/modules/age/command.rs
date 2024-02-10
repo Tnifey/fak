@@ -2,7 +2,7 @@ use clap::*;
 
 #[derive(Debug, Clone, Parser)]
 pub struct Arguments {
-    #[arg(short, long)]
+    #[arg(short, long, help = "Type of age to generate", default_value = "all")]
     pub r#type: Option<String>,
 }
 

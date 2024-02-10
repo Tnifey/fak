@@ -2,7 +2,7 @@ use clap::*;
 
 #[derive(Debug, Clone, Parser)]
 pub struct Arguments {
-    #[arg(long, help = "Country code")]
+    #[arg(long, help = "Country code in ISO 3166-1 alpha-2 format")]
     cc: Option<String>,
 }
 

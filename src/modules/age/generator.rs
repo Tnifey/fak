@@ -6,8 +6,8 @@ pub struct Input {
     pub r#type: Option<String>,
 }
 
-#[derive(Debug, Clone)]
-pub enum Ages {
+#[derive(Debug, Clone, PartialEq)]
+pub enum Types {
     Child,
     Teen,
     Adult,
@@ -16,22 +16,19 @@ pub enum Ages {
 }
 
 pub fn generate(input: Input) -> Option<Output> {
-    let r#type = match input.r#type {
-        Some(r#type) => match r#type.to_lowercase().as_str() {
-            "child" => Ages::Child,
-            "teen" => Ages::Teen,
-            "adult" => Ages::Adult,
-            "senior" => Ages::Senior,
-            _ => Ages::All,
-        },
-        _ => Ages::All,
+    let r#type = match input.r#type.unwrap_or("all".to_string()).as_str() {
+        "child" => Types::Child,
+        "teen" => Types::Teen,
+        "adult" => Types::Adult,
+        "senior" => Types::Senior,
+        _ => Types::All,
     };
 
     let value = match r#type {
-        Ages::Child => from_range!(0..=12),
-        Ages::Teen => from_range!(13..=19),
-        Ages::Adult => from_range!(20..=65),
-        Ages::Senior => from_range!(66..=100),
+        Types::Child => from_range!(0..=12),
+        Types::Teen => from_range!(13..=19),
+        Types::Adult => from_range!(20..=65),
+        Types::Senior => from_range!(66..=100),
         _ => from_range!(0..=100),
     }.to_string();
 

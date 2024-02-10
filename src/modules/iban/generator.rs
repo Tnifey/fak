@@ -3,6 +3,42 @@ use super::utils::{mod97, rand_alpha, rand_pattern10, rand_pattern100, to_digit_
 use crate::types::Output;
 use rand::Rng;
 
+#[derive(Debug, Clone)]
+pub struct Input {
+    pub country_code: Option<String>,
+}
+
+pub fn generate(input: Input) -> Option<Output> {
+    let iban = iban_from_country_code(input.country_code);
+    let value = generator(iban.clone())?;
+
+    let iban = value.clone();
+    let bban = iban.chars().skip(4).collect::<String>();
+    let country = iban.chars().take(2).collect::<String>();
+    let checksum = iban.chars().skip(2).take(2).collect::<String>();
+    let pretty = iban
+        .clone()
+        .chars()
+        .collect::<Vec<char>>()
+        .chunks(4)
+        .map(|c| c.iter().collect::<String>())
+        .collect::<Vec<String>>()
+        .join(" ");
+
+    let result = Output {
+        value,
+        meta: meta!(
+            ("IBAN".into(), iban),
+            ("Country".into(), country),
+            ("Checksum".into(), checksum),
+            ("BBAN".into(), bban),
+            ("Pretty".into(), pretty),
+        ),
+    };
+
+    Some(result)
+}
+
 pub fn generator(iban: Iban) -> Option<String> {
     let mut s = "".to_string();
     let mut count = 0;
@@ -48,40 +84,4 @@ pub fn generator(iban: Iban) -> Option<String> {
     };
 
     Some(format!("{country}{checksum}{s}"))
-}
-
-#[derive(Debug, Clone)]
-pub struct Input {
-    pub country_code: Option<String>,
-}
-
-pub fn generate(input: Input) -> Option<Output> {
-    let iban = iban_from_country_code(input.country_code);
-    let value = generator(iban.clone())?;
-
-    let iban = value.clone();
-    let bban = iban.chars().skip(4).collect::<String>();
-    let country = iban.chars().take(2).collect::<String>();
-    let checksum = iban.chars().skip(2).take(2).collect::<String>();
-    let pretty = iban
-        .clone()
-        .chars()
-        .collect::<Vec<char>>()
-        .chunks(4)
-        .map(|c| c.iter().collect::<String>())
-        .collect::<Vec<String>>()
-        .join(" ");
-
-    let result = Output {
-        value,
-        meta: meta!(
-            ("IBAN".into(), iban),
-            ("Country".into(), country),
-            ("Checksum".into(), checksum),
-            ("BBAN".into(), bban),
-            ("Pretty".into(), pretty),
-        ),
-    };
-
-    Some(result)
 }
