@@ -4,9 +4,7 @@ use rand::Rng;
 #[derive(Debug, Clone)]
 pub struct Input {}
 
-pub fn generate(input: Option<Input>) -> Output {
-    let _ = input.unwrap_or(Input {});
-
+pub fn generate(_input: Option<Input>) -> Output {
     let preset = super::presets::random_preset();
     let (prefix, size) = (preset.random_prefix(), preset.random_size());
     let count = size - prefix.len() - 1;

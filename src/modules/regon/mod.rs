@@ -1,3 +1,3 @@
 pub mod command;
-pub mod consts;
+pub mod presets;
 pub mod generator;
