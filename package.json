@@ -1,6 +1,5 @@
 {
     "scripts": {
-        "dev": "tsx watch test.ts",
         "watch": "cargo watch build -r",
         "build": "cargo build -r",
         "postbuild": "yarn run pub",
