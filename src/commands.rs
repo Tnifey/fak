@@ -1,6 +1,6 @@
 use clap::Subcommand;
 
-use crate::{modules::*, types::Output};
+use crate::modules::*;
 
 #[derive(Debug, Subcommand)]
 pub enum Commands {
@@ -14,15 +14,22 @@ pub enum Commands {
 }
 
 pub fn commands(command: Commands, count: u16, pretty: bool) {
-    println!("count: {}", count);
-    println!("pretty: {}", pretty);
-    match command {
-        Commands::Age(args) => age::command::handle(args, count, pretty),
-        Commands::Pesel(args) => pesel::command::handle(args, count, pretty),
-        Commands::Nip(args) => nip::command::handle(args, count, pretty),
-        Commands::Regon(args) => regon::command::handle(args, count, pretty),
-        Commands::Iban(args) => iban::command::handle(args, count, pretty),
-        Commands::Bic(args) => bic::command::handle(args, count, pretty),
-        Commands::CreditCard(args) => credit_card::command::handle(args, count, pretty),
-    };
+    for i in 0..count {
+        let result = match command {
+            Commands::Age(ref args) => age::command::handle(args.clone()),
+            Commands::Pesel(ref args) => pesel::command::handle(args.clone()),
+            Commands::Nip(ref args) => nip::command::handle(args.clone()),
+            Commands::Regon(ref args) => regon::command::handle(args.clone()),
+            Commands::Iban(ref args) => iban::command::handle(args.clone()),
+            Commands::Bic(ref args) => bic::command::handle(args.clone()),
+            Commands::CreditCard(ref args) => credit_card::command::handle(args.clone()),
+        };
+
+        if let Some(result) = result {
+            result.print(pretty);
+            if pretty && i < count - 1 {
+                println!(" ");
+            }
+        }
+    }
 }

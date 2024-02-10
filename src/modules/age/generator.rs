@@ -15,11 +15,7 @@ pub enum Ages {
     All,
 }
 
-pub fn generate(input: Option<Input>) -> Option<Output> {
-    let input = input.unwrap_or(Input {
-        r#type: None,
-    });
-
+pub fn generate(input: Input) -> Option<Output> {
     let r#type = match input.r#type {
         Some(r#type) => match r#type.to_lowercase().as_str() {
             "child" => Ages::Child,

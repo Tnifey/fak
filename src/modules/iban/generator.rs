@@ -57,18 +57,9 @@ pub struct Input {
 
 pub fn generate(input: Input) -> Option<Output> {
     let iban = iban_from_country_code(input.country_code);
-    let iban = generator(iban)?;
+    let value = generator(iban.clone())?;
 
-    let result = Output {
-        value: iban,
-        meta: None,
-    };
-
-    Some(result)
-}
-
-pub fn format_pretty(output: Output) -> String {
-    let iban = output.value.clone();
+    let iban = value.clone();
     let bban = iban.chars().skip(4).collect::<String>();
     let country = iban.chars().take(2).collect::<String>();
     let checksum = iban.chars().skip(2).take(2).collect::<String>();
@@ -80,13 +71,17 @@ pub fn format_pretty(output: Output) -> String {
         .map(|c| c.iter().collect::<String>())
         .collect::<Vec<String>>()
         .join(" ");
-    [
-        format!("raw:         {}", iban.chars().skip(2).collect::<String>()),
-        format!("IBAN:      {}", iban),
-        format!("Country:   {}", country),
-        format!("Checksum:    {}", checksum),
-        format!("BBAN:          {}", bban),
-        format!("Pretty:    {}", pretty),
-    ]
-    .join("\n")
+
+    let result = Output {
+        value,
+        meta: meta!(
+            ("IBAN".into(), iban),
+            ("Country".into(), country),
+            ("Checksum".into(), checksum),
+            ("BBAN".into(), bban),
+            ("Pretty".into(), pretty),
+        ),
+    };
+
+    Some(result)
 }

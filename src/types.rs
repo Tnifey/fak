@@ -13,30 +13,14 @@ impl Output {
     }
 
     pub fn print(&self, pretty: bool) {
-        if pretty {
-            self.pretty();
-            println!(" ");
-        } else {
-            println!("{}", self.value);
+        match (pretty, self.meta.is_some()) {
+            (true, true) => self.pretty(),
+            (_, _) => println!("{}", self.value),
         }
     }
 
-    pub fn pretty(&self) {
-        match self.meta {
-            None => println!("{}", self.value),
-            Some(ref meta) => {
-                meta.iter().for_each(|(k, v)| {
-                    println!("{k}: {v}");
-                });
-            }
-        }
-        if self.meta.is_none() {
-            return println!("{}", self.value);
-        }
-
+    fn pretty(&self) {
         let meta = self.meta.as_ref().unwrap();
-        meta.iter().for_each(|(k, v)| {
-            println!("{k}: {v}");
-        });
+        meta.iter().for_each(|(k, v)| println!("{k}: {v}"));
     }
 }

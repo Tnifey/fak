@@ -1,7 +1,5 @@
 use clap::*;
 
-use super::generator::{generate, Input};
-
 #[derive(Debug, Clone, Parser)]
 pub struct Arguments {
     #[arg(short, long, help = "Year of birth")]
@@ -17,17 +15,11 @@ pub struct Arguments {
     gender: Option<String>,
 }
 
-pub fn handle(args: Arguments, count: u16, pretty: bool) {
-    for _ in 0..count {
-        let result = generate(Input {
-            year: args.year,
-            month: args.month,
-            day: args.day,
-            gender: args.gender.clone(),
-        });
-        if let Some(result) = result {
-            result.print(pretty);
-            println!("{}", result.value)
-        }
-    }
+pub fn handle(args: Arguments) -> Option<crate::types::Output> {
+    super::generator::generate(super::generator::Input {
+        year: args.year,
+        month: args.month,
+        day: args.day,
+        gender: args.gender.clone(),
+    })
 }

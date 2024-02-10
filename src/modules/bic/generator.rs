@@ -6,8 +6,7 @@ pub struct Input {
     pub branch: Option<bool>,
 }
 
-pub fn generate(input: Option<Input>) -> Option<Output> {
-    let input = input.unwrap_or(Input { branch: Some(probability!()) });
+pub fn generate(input: Input) -> Option<Output> {
     let include_branch_code = input.branch.unwrap_or(probability!());
 
     let bank_identifier = (0..4).map(|_| rand_alpha().to_uppercase()).collect::<String>();

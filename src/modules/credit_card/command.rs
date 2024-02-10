@@ -6,11 +6,6 @@ pub struct Arguments {
     pub vendor: Option<String>,
 }
 
-pub fn handle(args: Arguments, count: u16, pretty: bool) {
-    for _ in 0..count {
-        let result = super::generator::generate(None);
-        if let Some(result) = result {
-            result.print(pretty);
-        }
-    }
+pub fn handle(_args: Arguments) -> Option<crate::types::Output> {
+    super::generator::generate(None)
 }

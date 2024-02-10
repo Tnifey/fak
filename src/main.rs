@@ -16,10 +16,10 @@ struct App {
     #[command(subcommand)]
     pub command: commands::Commands,
 
-    #[arg(short, long, help="Number of items to generate", default_value="1")]
+    #[arg(long, help="Number of items to generate", default_value="1", global=true)]
     pub count: u16,
 
-    #[arg(short, long, help="Pretty print the output", default_value="false")]
+    #[arg(long, help="Pretty print the output", default_value="false", global=true)]
     pub pretty: bool,
 }
 

@@ -6,15 +6,8 @@ pub struct Arguments {
     pub branch: Option<bool>,
 }
 
-pub fn handle(args: Arguments, count: u16, pretty: bool) {
-    let input = super::generator::Input {
+pub fn handle(args: Arguments) -> Option<crate::types::Output> {
+    super::generator::generate(super::generator::Input {
         branch: args.branch,
-    };
-    let result = super::generator::generate(Some(input));
-    if let Some(result) = result {
-        match pretty {
-            true => println!("{}", super::generator::format_pretty(&result)),
-            false => println!("{}", result.value),
-        }
-    }
+    })
 }
