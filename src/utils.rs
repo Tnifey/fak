@@ -1,7 +1,4 @@
-use rand::{
-    distributions::Alphanumeric,
-    Rng,
-};
+use rand::{distributions::Alphanumeric, Rng};
 
 macro_rules! from_range {
     ($x:expr) => {
@@ -16,6 +13,13 @@ macro_rules! probability {
 
     ($x:expr) => {
         rand::thread_rng().gen_bool($x)
+    };
+}
+
+macro_rules! meta {
+    () => { None };
+    ($($x:expr),+ $(,)?) => {
+        Some::<Vec<(String, String)>>(vec!($($x),+) as Vec<(String, String)>)
     };
 }
 

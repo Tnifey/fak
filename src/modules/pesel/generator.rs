@@ -7,7 +7,7 @@ pub struct Input {
     pub year: Option<u16>,
     pub month: Option<u16>,
     pub day: Option<u16>,
-    pub sex: Option<String>,
+    pub gender: Option<String>,
 }
 
 trait FormatPretty {
@@ -25,11 +25,11 @@ pub fn generate(input: Input) -> Option<Output> {
         year,
         month,
         day,
-        sex,
+        gender,
     } = input;
 
-    let sex = match sex {
-        Some(sex) => match sex.to_lowercase().as_str() {
+    let gender = match gender {
+        Some(gender) => match gender.to_lowercase().as_str() {
             "f" => Some(true),
             "m" => Some(false),
             _ => None,
@@ -72,16 +72,16 @@ pub fn generate(input: Input) -> Option<Output> {
     };
 
     let ran = from_range!(100..999);
-    let sex = match sex {
-        Some(sex) => {
+    let gender = match gender {
+        Some(gender) => {
             let daps = (0..9)
-                .filter(|i| i % 2 == if sex { 0 } else { 1 })
+                .filter(|i| i % 2 == if gender { 0 } else { 1 })
                 .collect::<Vec<i32>>();
             daps[from_range!(0..daps.len())]
         }
         None => from_range!(0..9),
     };
-    let parts = format!("{}{}{}{}{}", year, month, day, ran, sex);
+    let parts = format!("{}{}{}{}{}", year, month, day, ran, gender);
     let controllist = [1, 3, 7, 9, 1, 3, 7, 9, 1, 3];
     let mut sum = 0;
     for (i, c) in parts.chars().enumerate() {

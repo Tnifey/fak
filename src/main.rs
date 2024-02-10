@@ -15,9 +15,17 @@ struct App {
 
     #[command(subcommand)]
     pub command: commands::Commands,
+
+    #[arg(short, long, help="Number of items to generate", default_value="1")]
+    pub count: u16,
+
+    #[arg(short, long, help="Pretty print the output", default_value="false")]
+    pub pretty: bool,
 }
 
 fn main() {
     let app = App::parse();
-    commands::commands(app.command);
+    let App { count, pretty, .. } = app;
+    commands::commands(app.command, count, pretty);
 }
+

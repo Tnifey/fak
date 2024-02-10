@@ -4,39 +4,29 @@ use super::generator::{generate, Input};
 
 #[derive(Debug, Clone, Parser)]
 pub struct Arguments {
-    #[arg(short, long, default_value = "1")]
-    count: Option<u16>,
-
-    #[arg(short, long)]
+    #[arg(short, long, help = "Year of birth")]
     year: Option<u16>,
 
-    #[arg(short, long)]
+    #[arg(short, long, help = "Month of birth")]
     month: Option<u16>,
 
-    #[arg(short, long)]
+    #[arg(short, long, help = "Day of birth")]
     day: Option<u16>,
 
-    #[arg(short, long)]
-    sex: Option<String>,
+    #[arg(short, long, help = "Male or female")]
+    gender: Option<String>,
 }
 
-pub fn handle(args: Arguments) {
-    let Arguments {
-        count,
-        year,
-        month,
-        day,
-        sex,
-    } = args;
-    let input = Input {
-        year,
-        month,
-        day,
-        sex,
-    };
-    for _ in 0..count.unwrap_or(1) {
-        let result = generate(input.clone());
+pub fn handle(args: Arguments, count: u16, pretty: bool) {
+    for _ in 0..count {
+        let result = generate(Input {
+            year: args.year,
+            month: args.month,
+            day: args.day,
+            gender: args.gender.clone(),
+        });
         if let Some(result) = result {
+            result.print(pretty);
             println!("{}", result.value)
         }
     }

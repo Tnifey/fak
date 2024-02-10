@@ -3,22 +3,16 @@ use clap::*;
 
 #[derive(Debug, Clone, Parser)]
 pub struct Arguments {
-    #[arg(short, long, default_value = "1")]
-    count: Option<u16>,
-
-    #[arg(long)]
+    #[arg(long, help="Country code")]
     cc: Option<String>,
-
-    #[arg(long)]
-    pretty: Option<bool>,
 }
 
-pub fn handle(args: Arguments) {
-    let Arguments { count, cc, pretty } = args;
-    for _ in 0..count.unwrap_or(3) {
+pub fn handle(args: Arguments, count: u16, pretty: bool) {
+    let Arguments { cc } = args;
+    for _ in 0..count {
         let result = generate(Input { country_code: cc.clone() });
         if let Some(result) = result {
-            if pretty.is_some_and(|x| x) {
+            if pretty {
                 println!("{}", format_pretty(result));
             } else {
                 println!("{}", result.value)

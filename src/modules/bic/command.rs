@@ -3,14 +3,10 @@ use clap::*;
 #[derive(Debug, Clone, Parser)]
 pub struct Arguments {
     #[arg(short, long)]
-    pub pretty: Option<bool>,
-
-    #[arg(short, long)]
     pub branch: Option<bool>,
 }
 
-pub fn handle(args: Arguments) {
-    let pretty = args.pretty.unwrap_or(false);
+pub fn handle(args: Arguments, count: u16, pretty: bool) {
     let input = super::generator::Input {
         branch: args.branch,
     };

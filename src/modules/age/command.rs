@@ -6,7 +6,7 @@ pub struct Arguments {
     pub r#type: Option<String>,
 }
 
-pub fn handle(args: Arguments) {
+pub fn handle(args: Arguments, count: u16, pretty: bool) {
     let r#type = args.r#type;
     let input = super::generator::Input {
         r#type,
