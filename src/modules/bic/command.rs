@@ -1,6 +1,7 @@
 use clap::*;
 
 #[derive(Debug, Clone, Parser)]
+#[command(about = "Generate a random Business Identifier Code (BIC) number")]
 pub struct Arguments {
     #[arg(short, long)]
     pub branch: Option<bool>,

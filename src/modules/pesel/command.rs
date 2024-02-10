@@ -1,6 +1,7 @@
 use clap::*;
 
 #[derive(Debug, Clone, Parser)]
+#[command(about = "Generate a random polish PESEL number")]
 pub struct Arguments {
     #[arg(short, long, help = "Year of birth")]
     year: Option<u16>,

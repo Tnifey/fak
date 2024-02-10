@@ -1,6 +1,7 @@
 use clap::*;
 
 #[derive(Debug, Clone, Parser)]
+#[command(about = "Generate a random IBAN number")]
 pub struct Arguments {
     #[arg(long, help = "Country code in ISO 3166-1 alpha-2 format")]
     cc: Option<String>,
