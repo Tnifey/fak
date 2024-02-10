@@ -1,60 +1,55 @@
+use std::collections::HashMap;
+
 use crate::types::Output;
 use rand::Rng;
 
 #[derive(Debug, Clone)]
-pub struct Input {
-    vendor: Option<String>,
-}
+pub struct Input { }
 
 pub fn generate(input: Option<Input>) -> Option<Output> {
-    let input = input.unwrap_or(Input { vendor: None });
+    let _ = input.unwrap_or(Input { });
 
     let preset = super::presets::random_preset();
-    let prefix = preset.random_prefix();
-    let number = (0..preset.digit_count)
+    let (prefix, size) = (preset.random_prefix(), preset.random_size());
+    let count = size - prefix.len() - 1;
+    let holder_number = (0..count)
         .map(|_| from_range!(0..10).to_string())
         .collect::<String>();
-    let number_with_prefix = format!("{prefix}{number}");
-    let checksum = calculate_checksum(number_with_prefix);
+    let card_number = format!("{prefix}{holder_number}");
 
-    let credit_card = format!("{prefix}{number}{checksum}");
+    let checksum = calculate_checksum(card_number.clone());
 
-    let is_valid = validate_checksum(credit_card.clone());
+    let credit_card = format!("{card_number}{checksum}");
 
-    println!("{} {} {}", credit_card, is_valid, preset.vendor);
+    let meta: HashMap<String, String> = HashMap::from([
+        ("vendor".into(), preset.vendor),
+        ("prefix".into(), prefix),
+        ("size".into(), size.to_string()),
+    ]);
 
-    let pretty = credit_card
-        .chars()
-        .collect::<Vec<char>>()
-        .chunks(4)
-        .map(|c| c.iter().collect::<String>())
-        .collect::<Vec<String>>()
-        .join(" ");
+    let output = Output {
+        value: credit_card,
+        meta: Some(meta),
+    };
 
-    let pretty = format!("{} ({}) ({})", pretty, preset.vendor, credit_card.len());
-
-    Some(Output {
-        value: pretty,
-        meta: None,
-    })
+    Some(output)
 }
 
 pub fn calculate_checksum(card_number: String) -> u32 {
     let reverse_card_number = card_number.chars().rev();
     let sum = reverse_card_number
-        .map(|c| c.to_digit(10).unwrap())
+        .enumerate()
+        .map(|(i, c)| {
+            let num = c.to_digit(10).unwrap();
+            let num = if i % 2 == 0 { num * 2 } else { num };
+            match num {
+                0..=9 => num,
+                _ => num - 9,
+            }
+        })
         .sum::<u32>();
 
-    (((sum / 10) + 1) * 10 - sum) % 10
-}
-
-pub fn validate_checksum(card_number: String) -> bool {
-    let (number, checksum) = card_number.split_at(card_number.len() - 1);
-    let checksum = checksum.parse::<u32>().unwrap();
-    let rev = number.chars().rev();
-    let sum = rev
-        .map(|c| c.to_digit(10).unwrap_or(0) * 2)
-        .map(|c| if c > 9 { c - 9 } else { c })
-        .sum::<u32>();
-    sum % 10 == checksum
+    let div = sum / 10 + 1;
+    let cal = div * 10 - sum;
+    cal % 10
 }
