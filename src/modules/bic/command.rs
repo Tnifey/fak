@@ -7,7 +7,7 @@ pub struct Arguments {
     pub branch: Option<bool>,
 }
 
-pub fn handle(args: Arguments) -> Option<crate::types::Output> {
+pub fn handle(args: Arguments) -> crate::types::Output {
     super::generator::generate(super::generator::Input {
         branch: args.branch,
     })

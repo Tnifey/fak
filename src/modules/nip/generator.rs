@@ -5,7 +5,7 @@ use crate::types::Output;
 #[derive(Debug, Clone)]
 pub struct Input {}
 
-pub fn generate(input: Input) -> Option<Output> {
+pub fn generate(input: Input) -> Output {
     let weights = [6, 5, 7, 2, 3, 4, 5, 6, 7];
     let stage = from_range!(100000000..=999999999).to_string();
 
@@ -22,8 +22,5 @@ pub fn generate(input: Input) -> Option<Output> {
 
     let value = format!("{}{}", stage, checksum);
 
-    Some(Output {
-        value,
-        meta: Default::default(),
-    })
+    Output::new(value)
 }

@@ -5,6 +5,6 @@ use crate::types::Output;
 #[command(about = "Generate a random polish identity card number")]
 pub struct Arguments {}
 
-pub fn handle(_args: Arguments) -> Option<Output> {
+pub fn handle(_args: Arguments) -> Output {
    super::generator::generate(super::generator::Input {})
 }

@@ -7,6 +7,6 @@ pub struct Arguments {
     pub vendor: Option<String>,
 }
 
-pub fn handle(_args: Arguments) -> Option<crate::types::Output> {
+pub fn handle(_args: Arguments) -> crate::types::Output {
     super::generator::generate(None)
 }

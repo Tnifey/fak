@@ -5,7 +5,7 @@ use crate::modules::*;
 #[derive(Debug, Subcommand)]
 pub enum Commands {
     Nip(nip::command::Arguments),
-    Pesel (pesel::command::Arguments),
+    Pesel(pesel::command::Arguments),
     Regon(regon::command::Arguments),
     Iban(iban::command::Arguments),
     Bic(bic::command::Arguments),
@@ -25,11 +25,9 @@ pub fn commands(command: Commands, count: u16, pretty: bool) {
             Commands::IdentityCard(ref args) => identity_card::command::handle(args.clone()),
         };
 
-        if let Some(result) = result {
-            result.print(pretty);
-            if pretty && i < count - 1 {
-                println!(" ");
-            }
+        result.print(pretty);
+        if pretty && i < count - 1 {
+            println!(" ");
         }
     }
 }

@@ -16,13 +16,6 @@ macro_rules! probability {
     };
 }
 
-macro_rules! meta {
-    () => { None };
-    ($($x:expr),+ $(,)?) => {
-        Some::<Vec<(String, String)>>(vec!($($x),+) as Vec<(String, String)>)
-    };
-}
-
 pub fn code_point(c: char) -> Option<u16> {
     let mut b = [0; 2];
     return c.encode_utf16(&mut b).first().copied();

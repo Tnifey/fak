@@ -6,7 +6,7 @@ pub struct Input {
     pub branch: Option<bool>,
 }
 
-pub fn generate(input: Input) -> Option<Output> {
+pub fn generate(input: Input) -> Output {
     let include_branch_code = input.branch.unwrap_or(probability!());
 
     let bank_identifier = (0..4).map(|_| rand_alpha().to_uppercase()).collect::<String>();
@@ -22,7 +22,7 @@ pub fn generate(input: Input) -> Option<Output> {
 
     let value = format!("{bank_identifier}{country_code}{location_code}{branch_code}");
 
-    Some(Output::new(value))
+    Output::new(value)
 }
 
 pub fn format_pretty(output: &Output) -> String {

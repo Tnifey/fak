@@ -16,7 +16,7 @@ pub struct Arguments {
     gender: Option<String>,
 }
 
-pub fn handle(args: Arguments) -> Option<crate::types::Output> {
+pub fn handle(args: Arguments) -> crate::types::Output {
     super::generator::generate(super::generator::Input {
         year: args.year,
         month: args.month,

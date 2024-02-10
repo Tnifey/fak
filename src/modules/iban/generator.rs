@@ -8,9 +8,9 @@ pub struct Input {
     pub country_code: Option<String>,
 }
 
-pub fn generate(input: Input) -> Option<Output> {
+pub fn generate(input: Input) -> Output {
     let iban = iban_from_country_code(input.country_code);
-    let value = generator(iban.clone())?;
+    let value = generator(iban.clone());
 
     let iban = value.clone();
     let bban = iban.chars().skip(4).collect::<String>();
@@ -34,10 +34,10 @@ pub fn generate(input: Input) -> Option<Output> {
             ("BBAN", &bban),
             ("Pretty", &pretty),
         ],
-    ).some()
+    )
 }
 
-pub fn generator(iban: Iban) -> Option<String> {
+pub fn generator(iban: Iban) -> String {
     let mut s = "".to_string();
     let mut count = 0;
     for bban in iban.bban.iter() {
@@ -81,5 +81,5 @@ pub fn generator(iban: Iban) -> Option<String> {
         _ => checksum.to_string(),
     };
 
-    Some(format!("{country}{checksum}{s}"))
+    format!("{country}{checksum}{s}")
 }

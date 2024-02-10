@@ -5,7 +5,7 @@ use crate::types::Output;
 #[derive(Debug)]
 pub struct Input {}
 
-pub fn generate(_input: Input) -> Option<Output> {
+pub fn generate(_input: Input) -> Output {
     let voivodeship = super::consts::VOIVODESHIPS[rand::thread_rng().gen_range(0..super::consts::VOIVODESHIPS.len())];
     let stage = format!("{voivodeship}{}", from_range!(100000..=999999).to_string());
 
@@ -26,5 +26,5 @@ pub fn generate(_input: Input) -> Option<Output> {
             ("stage", &stage),
             ("checksum", &checksum.to_string()),
         ],
-    ).some()
+    )
 }

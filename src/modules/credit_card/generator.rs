@@ -4,7 +4,7 @@ use rand::Rng;
 #[derive(Debug, Clone)]
 pub struct Input {}
 
-pub fn generate(input: Option<Input>) -> Option<Output> {
+pub fn generate(input: Option<Input>) -> Output {
     let _ = input.unwrap_or(Input {});
 
     let preset = super::presets::random_preset();
@@ -44,5 +44,5 @@ pub fn generate(input: Option<Input>) -> Option<Output> {
             ("Checksum", &checksum.to_string()),
             ("Card number", &credit_card),
         ],
-    ).some()
+    )
 }

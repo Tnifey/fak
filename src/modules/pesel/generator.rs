@@ -20,7 +20,7 @@ impl FormatPretty for Output {
     }
 }
 
-pub fn generate(input: Input) -> Option<Output> {
+pub fn generate(input: Input) -> Output {
     let Input {
         year,
         month,
@@ -94,10 +94,5 @@ pub fn generate(input: Input) -> Option<Output> {
         sum => 10 - (sum % 10),
     };
 
-    let result = Output {
-        value: format!("{}{}", parts, control),
-        meta: Default::default(),
-    };
-
-    Some(result)
+    Output::new(format!("{}{}", parts, control))
 }

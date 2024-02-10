@@ -4,7 +4,7 @@ use rand::Rng;
 #[derive(Debug, Clone)]
 pub struct Input {}
 
-pub fn generate(_args: Input) -> Option<Output> {
+pub fn generate(_args: Input) -> Output {
     let weights = [7, 3, 1, 9, 7, 3, 1, 7, 3];
     let pattern = [
         from_range!(10..=13), // A-D
@@ -41,5 +41,5 @@ pub fn generate(_args: Input) -> Option<Output> {
             ("number", &number),
             ("value", &format!("{series}{number}{checksum}")),
         ],
-    ).some()
+    )
 }
