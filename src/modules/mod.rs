@@ -15,3 +15,6 @@ pub mod iban;
 
 #[path = "./bic/mod.rs"]
 pub mod bic;
+
+#[path = "./credit_card/mod.rs"]
+pub mod credit_card;

@@ -10,6 +10,7 @@ pub enum Commands {
     Regon(regon::command::Arguments),
     Iban(iban::command::Arguments),
     Bic(bic::command::Arguments),
+    CreditCard(credit_card::command::Arguments),
 }
 
 pub fn commands(command: Commands) {
@@ -20,5 +21,6 @@ pub fn commands(command: Commands) {
         Commands::Regon(args) => regon::command::handle(args),
         Commands::Iban(args) => iban::command::handle(args),
         Commands::Bic(args) => bic::command::handle(args),
+        Commands::CreditCard(args) => credit_card::command::handle(args),
     }
 }
