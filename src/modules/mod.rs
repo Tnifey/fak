@@ -1,6 +1,3 @@
-#[path = "./age/mod.rs"]
-pub mod age;
-
 #[path = "./pesel/mod.rs"]
 pub mod pesel;
 
