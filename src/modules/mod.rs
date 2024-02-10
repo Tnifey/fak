@@ -18,3 +18,6 @@ pub mod bic;
 
 #[path = "./credit_card/mod.rs"]
 pub mod credit_card;
+
+#[path = "./identity_card/mod.rs"]
+pub mod identity_card;

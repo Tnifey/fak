@@ -11,6 +11,7 @@ pub enum Commands {
     Iban(iban::command::Arguments),
     Bic(bic::command::Arguments),
     CreditCard(credit_card::command::Arguments),
+    IdentityCard(identity_card::command::Arguments),
 }
 
 pub fn commands(command: Commands, count: u16, pretty: bool) {
@@ -23,6 +24,7 @@ pub fn commands(command: Commands, count: u16, pretty: bool) {
             Commands::Iban(ref args) => iban::command::handle(args.clone()),
             Commands::Bic(ref args) => bic::command::handle(args.clone()),
             Commands::CreditCard(ref args) => credit_card::command::handle(args.clone()),
+            Commands::IdentityCard(ref args) => identity_card::command::handle(args.clone()),
         };
 
         if let Some(result) = result {

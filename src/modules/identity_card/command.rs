@@ -1,20 +1,10 @@
-#[derive(Debug, Clone, Parse)]
-pub struct Arguments {
-    #[arg(short, long)]
-    pub count: Option<u32>,
-}
+use clap::*;
+use crate::types::Output;
 
-pub fn handle(args: Arguments) {
-   let Arguments { count } = args;
+#[derive(Debug, Clone, Parser)]
+#[command(about = "Generate a random polish identity card number")]
+pub struct Arguments {}
 
-   for _ in 0..count.unwrap_or(1) {
-       let result = super::generator::generate(super::generator::Input {});
-       if let Some(result) = result {
-           if pretty.unwrap_or(false) {
-               println!("{}", super::generator::format_pretty(result));
-           } else {
-               println!("{}", result.value);
-           }
-       }
-   }
+pub fn handle(_args: Arguments) -> Option<Output> {
+   super::generator::generate(super::generator::Input {})
 }
