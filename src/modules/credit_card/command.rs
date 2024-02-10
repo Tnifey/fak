@@ -2,7 +2,7 @@ use clap::*;
 
 #[derive(Debug, Clone, Parser)]
 pub struct Arguments {
-    #[arg(short, long, help = "Vendor of the credit card")]
+    #[arg(short, long, help = "Vendor of the credit card (visa, mastercard)")]
     pub vendor: Option<String>,
 }
 
