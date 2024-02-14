@@ -18,3 +18,6 @@ pub mod credit_card;
 
 #[path = "./identity_card/mod.rs"]
 pub mod identity_card;
+
+#[path = "./random_int/mod.rs"]
+pub mod random_int;
