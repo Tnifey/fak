@@ -44,3 +44,9 @@ pub fn generate(_input: Option<Input>) -> Output {
         ],
     )
 }
+
+#[test]
+fn test_generate() {
+    let output = generate(None);
+    assert!(output.value.len() >= 13 && output.value.len() <= 19);
+}

@@ -1,5 +1,9 @@
+use crate::{
+    modules::iban::utils::rand_alpha,
+    types::Output,
+    utils::{rand_alphanumeric, rand_iso3166},
+};
 use rand::Rng;
-use crate::{modules::iban::utils::rand_alpha, types::Output, utils::{rand_alphanumeric, rand_iso3166}};
 
 #[derive(Debug, Clone)]
 pub struct Input {
@@ -9,7 +13,9 @@ pub struct Input {
 pub fn generate(input: Input) -> Output {
     let include_branch_code = input.branch.unwrap_or(probability!());
 
-    let bank_identifier = (0..4).map(|_| rand_alpha().to_uppercase()).collect::<String>();
+    let bank_identifier = (0..4)
+        .map(|_| rand_alpha().to_uppercase())
+        .collect::<String>();
     let country_code = rand_iso3166();
     let location_code = rand_alphanumeric(2).to_uppercase();
     let branch_code = match include_branch_code {
@@ -40,5 +46,6 @@ pub fn format_pretty(output: &Output) -> String {
         format!("Country code:       {country_code}"),
         format!("Location:           {location_code}"),
         format!("Branch code:        {branch_code}"),
-    ].join("\n")
+    ]
+    .join("\n")
 }

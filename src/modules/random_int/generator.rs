@@ -1,5 +1,5 @@
-use rand::Rng;
 use crate::types::Output;
+use rand::Rng;
 
 #[derive(Debug, Clone)]
 pub struct Input {

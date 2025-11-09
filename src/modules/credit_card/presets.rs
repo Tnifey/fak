@@ -1,5 +1,5 @@
-use rand::Rng;
 use once_cell::sync::Lazy;
+use rand::Rng;
 
 pub const VENDOR: [&str; 2] = ["visa", "mastercard"];
 
@@ -45,4 +45,3 @@ pub static PRESET_MASTERCARD: Lazy<Preset> = once_cell::sync::Lazy::new(|| Prese
         "55".to_string(),
     ],
 });
-

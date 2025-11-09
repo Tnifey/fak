@@ -6,8 +6,9 @@ use crate::types::Output;
 pub struct Input {}
 
 pub fn generate(_input: Input) -> Output {
-    let voivodeship = super::presets::VOIVODESHIPS[rand::thread_rng().gen_range(0..super::presets::VOIVODESHIPS.len())];
-    let stage = format!("{voivodeship}{}", from_range!(100000..=999999).to_string());
+    let voivodeship = super::presets::VOIVODESHIPS
+        [rand::thread_rng().gen_range(0..super::presets::VOIVODESHIPS.len())];
+    let stage = format!("{voivodeship}{}", from_range!(100000..=999999));
 
     let sum = stage
         .clone()
@@ -22,7 +23,7 @@ pub fn generate(_input: Input) -> Output {
     Output::meta(
         &format!("{}{}", stage, checksum),
         vec![
-            ("voivodeship", &voivodeship),
+            ("voivodeship", voivodeship),
             ("stage", &stage),
             ("checksum", &checksum.to_string()),
         ],

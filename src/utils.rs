@@ -18,7 +18,7 @@ macro_rules! probability {
 
 pub fn code_point(c: char) -> Option<u16> {
     let mut b = [0; 2];
-    return c.encode_utf16(&mut b).first().copied();
+    c.encode_utf16(&mut b).first().copied()
 }
 
 pub const ISO3166: [&str; 250] = [

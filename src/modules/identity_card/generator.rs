@@ -37,8 +37,8 @@ pub fn generate(_input: Input) -> Output {
         &format!("{series}{number}{checksum}"),
         vec![
             ("checksum", &format!("{checksum}")),
-            ("series", &series),
-            ("number", &number),
+            ("series", series),
+            ("number", number),
             ("value", &format!("{series}{number}{checksum}")),
         ],
     )
